@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkHunt — Вход и регистрация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="registr.css">
+</head>
+<body>
+<header class="auth-header">
+    <a class="logo" href="index.html">
+        <span class="logo-dot"></span>
+        WorkHunt
+    </a>
+    <a class="back-link" href="index.html">На главную</a>
+</header>
+
+<main class="auth-page">
+    <section class="auth-info">
+        <div class="info-badge">Карьера начинается здесь</div>
+        <h1>Войдите в WorkHunt или создайте аккаунт</h1>
+        <p>Соискатели могут откликаться на вакансии и вести резюме. Работодатели — публиковать вакансии и смотреть отклики.</p>
+        <div class="info-list">
+            <span>Быстрые отклики</span>
+            <span>Личный кабинет</span>
+            <span>Чат с компаниями</span>
+        </div>
+    </section>
+
+    <section class="auth-card">
+        <div id="auth-content">
+            <div class="tabs">
+                <button class="tab active" id="tab-login" type="button" onclick="toggleForm('login')">Вход</button>
+                <button class="tab" id="tab-reg" type="button" onclick="toggleForm('reg')">Регистрация</button>
+            </div>
+
+            <form id="login-form" class="auth-form">
+                <div class="form-title">
+                    <h2>С возвращением</h2>
+                    <p>Введите данные, чтобы открыть личный кабинет.</p>
+                </div>
+
+                <label class="form-group">
+                    <span>Email</span>
+                    <input type="email" id="l-email" placeholder="email@mail.com" autocomplete="email">
+                </label>
+
+                <label class="form-group">
+                    <span class="label-row">
+                        Пароль
+                        <a href="#" id="forgot-password-link">Забыли пароль?</a>
+                    </span>
+                    <input type="password" id="l-pass" placeholder="Минимум 6 символов" autocomplete="current-password">
+                </label>
+
+                <button type="button" class="btn" onclick="handleLogin()">Войти</button>
+            </form>
+
+            <form id="reg-form" class="auth-form" style="display: none;">
+                <div class="form-title">
+                    <h2>Создать аккаунт</h2>
+                    <p>Выберите роль, чтобы WorkHunt показал нужные инструменты.</p>
+                </div>
+
+                <div class="role-selection">
+                    <button type="button" class="role-item active" id="role-seeker" onclick="setRole('seeker')">
+                        <strong>Соискатель</strong>
+                        <small>Ищу работу</small>
+                    </button>
+                    <button type="button" class="role-item" id="role-employer" onclick="setRole('employer')">
+                        <strong>Работодатель</strong>
+                        <small>Нанимаю людей</small>
+                    </button>
+                </div>
+
+                <label class="form-group">
+                    <span>Имя и фамилия</span>
+                    <input type="text" id="r-name" placeholder="Иван Иванов" autocomplete="name">
+                </label>
+
+                <label class="form-group">
+                    <span>Email</span>
+                    <input type="email" id="r-email" placeholder="email@mail.com" autocomplete="email">
+                    <small id="email-error" class="error-text">Этот email уже занят</small>
+                </label>
+
+                <div id="employer-fields" style="display: none;">
+                    <label class="form-group">
+                        <span>Компания</span>
+                        <input type="text" id="r-company" placeholder="Название организации">
+                    </label>
+                </div>
+
+                <label class="form-group">
+                    <span>Пароль</span>
+                    <input type="password" id="r-pass" placeholder="Минимум 6 символов" autocomplete="new-password">
+                </label>
+
+                <button type="button" class="btn" onclick="handleRegister()">Создать аккаунт</button>
+            </form>
+
+            <form id="forgot-form" class="auth-form" style="display: none;">
+                <div class="form-title">
+                    <h2>Восстановление</h2>
+                    <p>Введите email, и мы покажем сообщение для сброса пароля.</p>
+                </div>
+
+                <label class="form-group">
+                    <span>Email</span>
+                    <input type="email" id="f-email" placeholder="email@mail.com">
+                </label>
+
+                <button type="button" class="btn" onclick="handleResetPassword()">Сбросить пароль</button>
+                <button type="button" class="btn ghost" onclick="toggleForm('login')">Назад ко входу</button>
+            </form>
+        </div>
+
+        <div id="success-msg" class="success-box" style="display: none;">
+            <h2>Готово</h2>
+            <p id="success-text"></p>
+            <button class="btn" onclick="window.location.href='dashboard.html'">В личный кабинет</button>
+        </div>
+    </section>
+</main>
+
+<script src="registr.js"></script>
+</body>
+</html>

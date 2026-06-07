@@ -1,0 +1,506 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkHunt Admin — Панель управления</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-dot"></div>
+    <span class="logo-text">WorkHunt</span>
+    <span class="logo-badge">Admin</span>
+  </div>
+
+  <div class="sidebar-section-label">Главное</div>
+  <a class="nav-item active" onclick="showPage('dashboard', this)">
+    Дашборд
+  </a>
+  <a class="nav-item" onclick="showPage('jobs', this)">
+    Вакансии
+    <span class="nav-badge" id="jobs-nav-count">8</span>
+  </a>
+  <a class="nav-item" onclick="showPage('candidates', this)">
+    Кандидаты
+  </a>
+  <a class="nav-item" onclick="showPage('applications', this)">
+    Отклики
+    <span class="nav-badge red" id="apps-nav-count">3</span>
+  </a>
+
+  <div class="sidebar-section-label">Управление</div>
+  <a class="nav-item" onclick="showPage('add-job', this)">
+    Добавить вакансию
+  </a>
+  <a class="nav-item" onclick="showPage('companies', this)">
+    Компании
+  </a>
+  <a class="nav-item" onclick="showPage('analytics', this)">
+    Аналитика
+  </a>
+  <a class="nav-item" onclick="showPage('settings', this)">
+    Настройки
+  </a>
+
+  <div class="sidebar-footer">
+    <div class="admin-profile">
+      <div class="admin-avatar">А</div>
+      <div>
+        <div class="admin-name">Администратор</div>
+        <div class="admin-role">Super Admin</div>
+      </div>
+      <button class="logout-btn" title="Выйти" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="page-title" id="topbar-title">Дашборд</div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <input type="text" placeholder="Быстрый поиск..." oninput="globalSearch(this.value)">
+      </div>
+      <select class="language-select" id="language-select" onchange="setLanguage(this.value)" title="Язык">
+        <option value="ru">RU</option>
+        <option value="en">EN</option>
+        <option value="kk">KZ</option>
+      </select>
+      <div class="icon-btn" title="Уведомления">
+        !<span class="notif-dot"></span>
+      </div>
+      <a href="index.html" class="icon-btn" title="Открыть сайт" style="text-decoration:none">Сайт</a>
+    </div>
+  </div>
+
+
+  <div class="page active" id="page-dashboard">
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Активных вакансий</div>
+        <div class="stat-value" id="stat-jobs">8</div>
+        
+        <div class="stat-delta delta-up">↑ +2 за неделю</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Кандидатов</div>
+        <div class="stat-value" id="stat-candidates">10</div>
+        
+        <div class="stat-delta delta-up">↑ +3 за неделю</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Откликов</div>
+        <div class="stat-value" id="stat-apps">12</div>
+        
+        <div class="stat-delta delta-up">↑ +5 сегодня</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Трудоустроено</div>
+        <div class="stat-value">4</div>
+        
+        <div class="stat-delta delta-up">↑ +1 на этой неделе</div>
+      </div>
+    </div>
+
+    <div class="three-col">
+      <!-- Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Активность (отклики / вакансии)</div>
+          <button class="card-action">За месяц</button>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;gap:12px;margin-bottom:12px;font-size:12px">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block"></span>Отклики</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:var(--accent2);display:inline-block"></span>Вакансии</span>
+          </div>
+          <div class="chart-bars" id="chart-bars"></div>
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">По категориям</div>
+        </div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <svg width="96" height="96" viewBox="0 0 96 96">
+              <circle cx="48" cy="48" r="36" fill="none" stroke="var(--bg4)" stroke-width="16"/>
+              <!-- IT 40% -->
+              <circle cx="48" cy="48" r="36" fill="none" stroke="#C8FA5A" stroke-width="16"
+                stroke-dasharray="90.5 225.9" stroke-dashoffset="0" transform="rotate(-90 48 48)"/>
+              <!-- Design 20% -->
+              <circle cx="48" cy="48" r="36" fill="none" stroke="#A78BFA" stroke-width="16"
+                stroke-dasharray="45.2 225.9" stroke-dashoffset="-90.5" transform="rotate(-90 48 48)"/>
+              <!-- Finance 15% -->
+              <circle cx="48" cy="48" r="36" fill="none" stroke="#60A5FA" stroke-width="16"
+                stroke-dasharray="33.9 225.9" stroke-dashoffset="-135.7" transform="rotate(-90 48 48)"/>
+              <!-- Other 25% -->
+              <circle cx="48" cy="48" r="36" fill="none" stroke="#F97316" stroke-width="16"
+                stroke-dasharray="56.5 225.9" stroke-dashoffset="-169.6" transform="rotate(-90 48 48)"/>
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#C8FA5A"></div> IT <span class="legend-pct">40%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#A78BFA"></div> Дизайн <span class="legend-pct">20%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#60A5FA"></div> Финансы <span class="legend-pct">15%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#F97316"></div> Прочее <span class="legend-pct">25%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Recent Jobs -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Последние вакансии</div>
+          <button class="card-action" onclick="showPage('jobs', document.querySelector('.nav-item:nth-child(3)'))">Все →</button>
+        </div>
+        <div class="card-body" style="padding:0">
+          <table class="data-table" id="dash-jobs-table"></table>
+        </div>
+      </div>
+
+      <!-- Activity Feed -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Последние события</div>
+        </div>
+        <div class="card-body" style="padding:12px 20px" id="activity-feed"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-jobs">
+    <div class="section-hdr">
+      <div>
+        <h2>Управление вакансиями</h2>
+        <p id="jobs-count-text">Всего 8 вакансий</p>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('add-job', document.querySelectorAll('.nav-item')[4])">Добавить</button>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterJobsAdmin('all', this)">Все</button>
+      <button class="filter-chip" onclick="filterJobsAdmin('active', this)">Активные</button>
+      <button class="filter-chip" onclick="filterJobsAdmin('pending', this)">На проверке</button>
+      <button class="filter-chip" onclick="filterJobsAdmin('closed', this)">Закрытые</button>
+      <input class="filter-input" type="text" placeholder=" Поиск по названию..." oninput="searchJobsAdmin(this.value)" style="margin-left:auto">
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0">
+        <table class="data-table" id="jobs-table"></table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="page" id="page-candidates">
+    <div class="section-hdr">
+      <div>
+        <h2>Кандидаты</h2>
+        <p>База резюме соискателей</p>
+      </div>
+      <button class="btn btn-primary" onclick="openAddCandidateModal()">Добавить</button>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterCandidates('', this)">Все</button>
+      <button class="filter-chip" onclick="filterCandidates('IT', this)">IT</button>
+      <button class="filter-chip" onclick="filterCandidates('Design', this)">Дизайн</button>
+      <button class="filter-chip" onclick="filterCandidates('Marketing', this)">Маркетинг</button>
+      <button class="filter-chip" onclick="filterCandidates('Finance', this)">Финансы</button>
+      <button class="filter-chip" onclick="filterCandidates('HR', this)">HR</button>
+    </div>
+    <div class="candidate-grid" id="candidates-grid"></div>
+  </div>
+
+
+  <div class="page" id="page-applications">
+    <div class="section-hdr">
+      <div>
+        <h2>Отклики</h2>
+        <p id="apps-count-text">Всего 12 откликов</p>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterApps('all', this)">Все</button>
+      <button class="filter-chip" onclick="filterApps('new', this)">Новые</button>
+      <button class="filter-chip" onclick="filterApps('review', this)">На рассмотрении</button>
+      <button class="filter-chip" onclick="filterApps('approved', this)">Одобрено</button>
+      <button class="filter-chip" onclick="filterApps('rejected', this)">Отклонено</button>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0">
+        <table class="data-table" id="apps-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-add-job">
+    <div class="section-hdr">
+      <div>
+        <h2 id="add-job-title">Добавить вакансию</h2>
+        <p>Заполните все поля и опубликуйте</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-grid" id="add-job-form">
+          <div class="form-group">
+            <label class="form-label">Название вакансии *</label>
+            <input class="form-input" id="f-title" placeholder="напр. Senior Frontend Developer">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Компания *</label>
+            <input class="form-input" id="f-company" placeholder="Название компании">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Город / Локация *</label>
+            <input class="form-input" id="f-location" placeholder="Алматы / Remote">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Тип занятости</label>
+            <select class="form-select" id="f-type">
+              <option value="full">Полная занятость</option>
+              <option value="remote">Удалённая работа</option>
+              <option value="part">Частичная занятость</option>
+              <option value="internship">Стажировка</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Зарплата</label>
+            <input class="form-input" id="f-salary" placeholder="напр. от 400 000 ₸">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Категория</label>
+            <select class="form-select" id="f-category">
+              <option value="IT">IT и разработка</option>
+              <option value="Design">Дизайн</option>
+              <option value="Marketing">Маркетинг</option>
+              <option value="Finance">Финансы</option>
+              <option value="HR">HR</option>
+              <option value="Legal">Юриспруденция</option>
+              <option value="Sales">Продажи</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email для откликов *</label>
+            <input class="form-input" id="f-email" type="email" placeholder="hr@company.kz">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Статус</label>
+            <select class="form-select" id="f-status">
+              <option value="active">Активная</option>
+              <option value="pending">На проверке</option>
+              <option value="closed">Закрыта</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Навыки (через запятую)</label>
+            <input class="form-input" id="f-skills" placeholder="напр. React, TypeScript, Node.js">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Описание вакансии</label>
+            <textarea class="form-textarea" id="f-desc" placeholder="Опишите обязанности, задачи, требования и условия..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions" style="margin-top:20px">
+          <button class="btn btn-primary" onclick="saveJob()">Опубликовать вакансию</button>
+          <button class="btn btn-secondary" onclick="resetJobForm()">Очистить форму</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="page" id="page-companies">
+    <div class="section-hdr">
+      <div><h2>Компании</h2><p>Зарегистрированные работодатели</p></div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0">
+        <table class="data-table" id="companies-table"></table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="page" id="page-analytics">
+    <div class="section-hdr">
+      <div><h2>Аналитика</h2><p>Сводные данные платформы</p></div>
+    </div>
+    <div class="stats-grid" style="margin-bottom:24px">
+      <div class="stat-card">
+        <div class="stat-label">Просмотры вакансий</div>
+        <div class="stat-value">24 810</div>
+        
+        <div class="stat-delta delta-up">↑ +18% к прошлому месяцу</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Конверсия в отклик</div>
+        <div class="stat-value">3.2%</div>
+        
+        <div class="stat-delta delta-down">↓ -0.4% к прошлому</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Среднее время закрытия</div>
+        <div class="stat-value">18 дн</div>
+        <div class="stat-delta delta-up">↑ Быстрее на 3 дня</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Новых пользователей</div>
+        <div class="stat-value">1 240</div>
+        
+        <div class="stat-delta delta-up">↑ +340 за неделю</div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header"><div class="card-title">Топ вакансий по просмотрам</div></div>
+      <div class="card-body" id="analytics-top-jobs"></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Отклики по дням (последние 7 дней)</div></div>
+        <div class="card-body">
+          <div class="chart-bars" id="analytics-chart"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Трафик по городам</div></div>
+        <div class="card-body" id="city-stats"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="page" id="page-settings">
+    <div class="section-hdr">
+      <div><h2>Настройки</h2><p>Управление платформой</p></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Основные настройки</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">Название сайта</label>
+              <input class="form-input" value="WorkHunt">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Описание</label>
+              <input class="form-input" value="Платформа для поиска работы в Казахстане">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email поддержки</label>
+              <input class="form-input" type="email" value="support@workhunt.kz">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Телефон</label>
+              <input class="form-input" value="+7 727 123-45-67">
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:16px">
+            <button class="btn btn-primary" onclick="showToast('Настройки сохранены', 'success')">Сохранить</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Данные администратора</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">Имя</label>
+              <input class="form-input" value="Администратор">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" value="admin@workhunt.kz">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Новый пароль</label>
+              <input class="form-input" type="password" placeholder="Оставьте пустым">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Подтвердить пароль</label>
+              <input class="form-input" type="password" placeholder="Повторите пароль">
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:16px">
+            <button class="btn btn-primary" onclick="showToast('Данные обновлены', 'success')">Обновить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+
+<div class="toast-wrap" id="toasts"></div>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px">
+    <button class="modal-close-btn" onclick="closeConfirm()">x</button>
+    <div class="confirm-box">
+      
+      <div class="confirm-title">Удалить вакансию?</div>
+      <div class="confirm-sub" id="confirm-text">Это действие нельзя отменить. Вакансия будет удалена навсегда.</div>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" onclick="closeConfirm()">Отмена</button>
+        <button class="btn btn-danger" id="confirm-ok-btn">Удалить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="job-modal">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeJobModal()">x</button>
+    <div class="modal-title" id="jm-title">Вакансия</div>
+    <div class="modal-sub" id="jm-sub"></div>
+    <div id="jm-body"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cand-modal">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="document.getElementById('cand-modal').classList.remove('open')">x</button>
+    <div class="modal-title">Добавить кандидата</div>
+    <div class="modal-sub">Заполните профиль соискателя</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Имя *</label>
+        <input class="form-input" id="cn-name" placeholder="Имя Фамилия">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Категория</label>
+        <select class="form-select" id="cn-category">
+          <option value="IT">IT</option>
+          <option value="Design">Дизайн</option>
+          <option value="Marketing">Маркетинг</option>
+          <option value="Finance">Финансы</option>
+          <option value="HR">HR</option>
+          <option value="Legal">Юридическое</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Навыки (через запятую)</label>
+        <input class="form-input" id="cn-skills" placeholder="React, TypeScript, Git">
+      </div>
+    </div>
+    <div class="form-actions" style="margin-top:16px">
+      <button class="btn btn-primary" onclick="saveCandidate()">Добавить кандидата</button>
+    </div>
+  </div>
+</div>
+<script src="admin.js"></script>
+</body>
+</html>

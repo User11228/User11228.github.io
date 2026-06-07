@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkHunt — Чат</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+<!-- ════════════════ ШАПКА ════════════════ -->
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-dot"></div>
+    WorkHunt
+  </a>
+
+  <nav class="header-nav">
+    <a class="nav-link" href="index.html">Вакансии</a>
+    <a class="nav-link" href="dashboard.html">Личный кабинет</a>
+    <a class="nav-link active" href="chat.html">Чат</a>
+  </nav>
+
+  <div class="header-user">
+    <div class="user-ava" id="header-ava">А</div>
+    <span class="user-label" id="header-name">Загрузка...</span>
+  </div>
+</header>
+
+<!-- ════════════════ ОСНОВНОЙ LAYOUT ════════════════ -->
+<div class="chat-layout">
+
+  <!-- ── Левая панель: список диалогов ── -->
+  <div class="dialogs-panel">
+    <div class="panel-header">
+      <div class="panel-title">Сообщения</div>
+      <div class="search-box">
+        <span class="search-icon">Поиск</span>
+        <input
+          type="text"
+          id="search-dialogs"
+          placeholder="Поиск..."
+          oninput="filterDialogs(this.value)"
+        >
+      </div>
+    </div>
+    <div class="dialogs-list" id="dialogs-list">
+      <!-- Заполняется через JS -->
+    </div>
+  </div>
+
+  <!-- ── Средняя панель: окно чата ── -->
+  <div class="chat-panel" id="chat-panel">
+
+    <!-- Пустой экран по умолчанию -->
+    <div class="empty-chat" id="empty-chat">
+      <div class="empty-chat-icon">Чат</div>
+      <div class="empty-chat-title">Выберите диалог</div>
+      <div class="empty-chat-text">
+        Нажмите на компанию слева, чтобы открыть переписку
+      </div>
+    </div>
+
+    <!-- Шапка чата (скрыта до выбора диалога) -->
+    <div class="chat-header" id="chat-header" style="display:none">
+      <div class="chat-header-info">
+        <div class="company-ava" id="chat-header-ava" style="width:38px;height:38px;font-size:12px;border-radius:9px"></div>
+        <div>
+          <div class="chat-company-name" id="chat-header-name">Компания</div>
+          <div class="chat-vacancy" id="chat-header-vacancy">Вакансия</div>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <div class="chat-status" id="chat-header-status">онлайн</div>
+        <button class="icon-btn" title="Позвонить" onclick="toast('Функция звонка в разработке')">Call</button>
+        <button class="icon-btn" title="Информация" onclick="toggleInfoPanel()">i</button>
+      </div>
+    </div>
+
+    <!-- Лента сообщений -->
+    <div class="messages-area" id="messages-area" style="display:none">
+      <!-- Заполняется через JS -->
+    </div>
+
+    <!-- Подсказка "печатает..." -->
+    <div class="typing-indicator" id="typing-indicator" style="padding:0 20px 8px;display:none">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span id="typing-name">печатает...</span>
+    </div>
+
+    <!-- Строка ввода -->
+    <div class="input-area" id="input-area" style="display:none">
+
+      <!-- Прикреплённые файлы -->
+      <div class="attach-preview" id="attach-preview"></div>
+
+      <div class="input-row">
+        <!-- Кнопка прикрепления -->
+        <button class="attach-btn" onclick="attachFile()" title="Прикрепить файл">+</button>
+
+        <!-- Поле ввода -->
+        <textarea
+          class="input-field"
+          id="msg-input"
+          placeholder="Напишите сообщение..."
+          rows="1"
+          onkeydown="handleKeydown(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+
+        <!-- Кнопка отправки -->
+        <button class="send-btn" onclick="sendMessage()" title="Отправить">OK</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Правая панель: информация ── -->
+  <div class="info-panel" id="info-panel">
+    <!-- Заполняется через JS при выборе диалога -->
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script src="chat.js"></script>
+</body>
+</html>

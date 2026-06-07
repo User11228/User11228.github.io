@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkHunt — Личный кабинет</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="logo-dot"></div>
+      <span class="logo-text">WorkHunt</span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showTab('main', this)">Обзор</div>
+      <div id="nav-v" class="nav-item" onclick="showTab('vacancies', this)" style="display:none">Вакансии</div>
+      <div id="nav-r" class="nav-item" onclick="showTab('replies', this)" style="display:none">Отклики</div>
+      <div id="nav-cv" class="nav-item" onclick="showTab('resume', this)" style="display:none">Резюме</div>
+      <div class="nav-item" onclick="showTab('settings', this)">Настройки</div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-block">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Загрузка...</div>
+          <div class="user-role" id="user-role">роль</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Выйти</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <div id="tab-main" class="tab-content active">
+      <div class="page-hdr">
+        <h1 class="page-title">Добро пожаловать, <span id="welcome-name" style="color:var(--accent)">Пользователь</span>!</h1>
+        <p class="page-sub">Панель управления вашим профилем, вакансиями и статистикой в системе WorkHunt.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label" id="stat-card-1-title">Загрузка...</div>
+          <div class="stat-val" id="stat-card-1-val">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="stat-card-2-title">Загрузка...</div>
+          <div class="stat-val" id="stat-card-2-val">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="stat-card-3-title">Загрузка...</div>
+          <div class="stat-val" id="stat-card-3-val">0</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="tab-vacancies" class="tab-content">
+      <div class="page-hdr">
+        <h1 class="page-title">Управление вакансиями</h1>
+        <p class="page-sub">Список созданных вами рабочих мест, редактирование объявлений и автоматический подбор кандидатов.</p>
+      </div>
+      <div id="employer-vacancies-list"></div>
+    </div>
+
+    <div id="tab-replies" class="tab-content">
+      <div class="page-hdr">
+        <h1 class="page-title">Управление откликами</h1>
+        <p class="page-sub">Просмотр входящих резюме от соискателей или мониторинг статуса ваших собственных заявок.</p>
+      </div>
+      <div id="employer-replies-list"></div>
+      <div id="candidate-replies-list"></div>
+    </div>
+
+    <div id="tab-resume" class="tab-content">
+      <div class="page-hdr">
+        <h1 class="page-title">Ваше электронное резюме</h1>
+        <p class="page-sub">Заполните навыки и информацию о себе, чтобы работодатели могли быстрее изучить вашу кандидатуру.</p>
+      </div>
+      <div class="settings-block">
+        <div class="settings-block-hdr">Профессиональный профиль</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Ваше ФИО</label>
+            <input class="form-input" id="cv-name" placeholder="Иван Иванов">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Желаемая должность</label>
+            <input class="form-input" id="cv-title" placeholder="Например: Python-разработчик">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:16px;">
+          <label class="form-label">Ключевые навыки (через запятую)</label>
+          <input class="form-input" id="cv-skills" placeholder="python, flask, sql, git">
+        </div>
+        <div class="form-group" style="margin-top:16px;">
+          <label class="form-label">О себе / Опыт работы</label>
+          <textarea class="form-input" id="cv-bio" style="height:120px; resize:none;" placeholder="Расскажите о выполненных проектах..."></textarea>
+        </div>
+        <div style="margin-top:20px;">
+          <button class="btn btn-save" style="background:var(--accent); color:#000; font-weight:700; border:none; padding:12px 24px; border-radius:10px; cursor:pointer;" onclick="saveResume()">Сохранить резюме</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-settings" class="tab-content">
+      <div class="page-hdr">
+        <h1 class="page-title">Настройки аккаунта</h1>
+        <p class="page-sub">Управление личными данными вашей учетной записи.</p>
+      </div>
+      <div class="settings-block">
+        <div class="settings-block-hdr">Основная информация</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Имя пользователя / Название</label>
+            <input class="form-input" id="set-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email адрес</label>
+            <input class="form-input" id="set-email" disabled style="opacity:0.6;">
+          </div>
+        </div>
+        
+        <div class="employer-field" id="settings-employer-fields" style="display:none; margin-top:16px;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Компания</label>
+              <input class="form-input" id="set-company">
+            </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <button class="btn btn-save" style="background:var(--accent); color:#000; font-weight:700; border:none; padding:12px 24px; border-radius:10px; cursor:pointer;" onclick="saveSettings()">Сохранить изменения</button>
+        </div>
+      </div>
+
+      <div class="settings-block" style="border-color: rgba(251,113,133,0.15); margin-top:24px;">
+        <div class="settings-block-hdr" style="color: var(--red)">Опасная зона</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
+          <div>
+            <h4 style="color:#fff; font-size:14px; margin-bottom:4px;">Удаление аккаунта</h4>
+            <p style="color:var(--muted); font-size:13px;">Безвозвратное стирание учетной записи и всех сопутствующих данных из локальной базы.</p>
+          </div>
+          <button class="btn" style="background:rgba(251,113,133,0.1); color:var(--red); border:1px solid rgba(251,113,133,0.2); padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600;" onclick="deleteAccount()">Удалить аккаунт</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
